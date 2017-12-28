@@ -6,8 +6,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MarcoXZh/StmBlogger.git"
+  },
   "author": "MarcoXZh3",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarcoXZh/StmBlogger/issues"
+  },
+  "homepage": "https://github.com/MarcoXZh/StmBlogger#readme",
   "dependencies": {
     "alphanum-sort": "^1.0.2",
     "cron": "^1.3.0",
