@@ -15,13 +15,10 @@ var options = JSON.parse(fs.readFileSync('options.json', 'utf8').toString());
 options.author.posting = keys.posting;
 options.db.uri = 'mongodb://' + options.db.user + ':' + keys.dbkey
                               + '@localhost:27017/' + options.db.name;
-var now = new Date(new Date().getTime() + 3000);
-var cron = now.getUTCSeconds() + ' ' + now.getUTCMinutes() + ' '
-         + now.getUTCHours() + ' * * *';
 
 // The job to query CN tags
-new CronJob(cron, function() {
+new CronJob('00 05 00 * * *', function() {
     queryCNTags(options, function(blog) {
         // Do nothing
     }); // queryCNTags(options, function(blog) { ... });
-}, null, true, 'UTC'); // new CronJob(cron, function() { ... }, ... );
+}, null, true, 'UTC'); // new CronJob( ... );
