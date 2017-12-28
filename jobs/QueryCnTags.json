@@ -1,0 +1,21 @@
+{
+    "sqlserver": {
+        "server":           "sql.steemsql.com",
+        "user":             "steemit",
+        "password":         "steemit"
+    },
+    "db_collection":    "stmB_TagCN",
+    "days_before":      7,
+    "count":            10,
+    "title":            "CN区tag数据统计与分析-",
+    "json_metadata": {
+        "tags":             ["cn", "statistics", "steemsql"],
+        "app":              "steemit/0.1",
+        "format":           "markdown"
+    } ,
+    "body_ext":         ".md",
+    "decimal":          0.01,
+    "fmt_width_idx":    6,
+    "fmt_width_cnt":    8,
+    "fmt_width_name":   22
+}

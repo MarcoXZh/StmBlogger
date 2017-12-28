@@ -1,0 +1,12 @@
+{
+    "author": {
+        "name":             "xuzhen"
+
+    },
+    "db": {
+        "driver":           "MongoDB",
+        "name":             "cnbuddydb",
+        "user":             "cnbuddy"
+
+    }
+}
