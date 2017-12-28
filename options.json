@@ -4,9 +4,9 @@
 
     },
     "db": {
-        "driver":           "MongoDB",
-        "name":             "cnbuddydb",
-        "user":             "cnbuddy"
+        "engine":           "MongoDB",
+        "name":             "steemitdb",
+        "user":             "marcoxzh3"
 
     }
 }
