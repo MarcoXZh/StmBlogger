@@ -320,6 +320,9 @@ var prepareBlog = function(options, stats, callback) {
  * @param {function}    callback    (optional) the callback function
  */
 var publishBlog = function(options, blog, callback) {
+    console.log('QueryUtopianTags: publishing - ' + new Date().toISOString());
+    var permlink = options.author.name + '-utopian-io-blog-analysis-' +
+                   new Date().toISOString().split('T')[0];
     steem.broadcast.comment(options.author.posting, '', 'cn', options.author.name,
                             permlink, blog.title, blog.body, blog.json_metadata,
                             function(err, re) {

@@ -1,7 +1,7 @@
 /**
  * Main entry of the steemit blog autobot
  * @author  MarcoXZh3
- * @version 1.3.3
+ * @version 1.3.5
  */
 const CronJob = require('cron').CronJob;
 const encryption = require('./libencryption');
