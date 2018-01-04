@@ -1,12 +1,13 @@
 /**
  * Main entry of the steemit blog autobot
  * @author  MarcoXZh3
- * @version 1.2.0
+ * @version 1.3.0
  */
 const CronJob = require('cron').CronJob;
 const encryption = require('./libencryption');
 const fs = require('fs');
 const queryCNTags = require('./jobs/QueryCnTags');
+const QueryUtopianTypes = require('./jobs/QueryUtopianTypes');
 
 
 var password = fs.readFileSync('pw.log', 'utf8').toString().trim();
@@ -21,4 +22,11 @@ new CronJob('00 05 00 * * *', function() {
     queryCNTags(options, function(blog) {
         // Do nothing
     }); // queryCNTags(options, function(blog) { ... });
+}, null, true, 'UTC'); // new CronJob( ... );
+
+// The job to query Utopian.io tags
+new CronJob('00 05 01 * * *', function() {
+    QueryUtopianTypes(options, function(blog) {
+        // Do nothing
+    }); // QueryUtopianTypes(options, function(blog) { ... });
 }, null, true, 'UTC'); // new CronJob( ... );
