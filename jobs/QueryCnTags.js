@@ -136,38 +136,38 @@ var statistics = function(options, results, callback) {
 
     var stats = { count:keys.length };
     // Frequency of each tag sorted
-    stats.tag_freq =  sort(keys.map( (k)=>tags[k].count+'/'+k ))
+    stats.tag_freq = sort(keys.map( (k)=>tags[k].count+'/'+k ))
                             .map((e)=>e.split('/') );
     // Total votes by tag, sorted
-    stats.tag_votes =  sort(keys.map( (k)=>tags[k].net_votes+'/'+k ))
+    stats.tag_votes = sort(keys.map( (k)=>tags[k].net_votes+'/'+k ))
                             .map((e)=>e.split('/') );
     // Total children by tag, sorted
-    stats.tag_child =  sort(keys.map( (k)=>tags[k].children+'/'+k ))
+    stats.tag_child = sort(keys.map( (k)=>tags[k].children+'/'+k ))
                             .map((e)=>e.split('/') );
     // Total payouts by tag, sorted
-    stats.tag_pay =  sort(keys.map( (k)=>tags[k].total_payout_value+'/'+k ))
+    stats.tag_pay = sort(keys.map( (k)=>tags[k].total_payout_value+'/'+k ))
                             .map((e)=>e.split('/') );
     // Payouts per blog by tag, sorted
-    stats.tag_pay_avg =  sort(keys.map( (k)=>(10000*tags[k].total_payout_value/tags[k].count)+'/'+k ))
+    stats.tag_pay_avg = sort(keys.map( (k)=>(10000*tags[k].total_payout_value/tags[k].count)+'/'+k ))
                             .map((e)=>e.split('/') );
 
     // var categories = results.categories;
     // delete categories[''];
     // keys = Object.keys(categories);
     // // Frequency of each category sorted
-    // stats.cat_freq =  sort(keys.map( (k)=>categories[k].count+'/'+k ))
+    // stats.cat_freq = sort(keys.map( (k)=>categories[k].count+'/'+k ))
     //                         .map((e)=>e.split('/') );
     // // Total votes by category, sorted
-    // stats.cat_votes =  sort(keys.map( (k)=>categories[k].net_votes+'/'+k ))
+    // stats.cat_votes = sort(keys.map( (k)=>categories[k].net_votes+'/'+k ))
     //                         .map((e)=>e.split('/') );
     // // Total children by category, sorted
-    // stats.cat_child =  sort(keys.map( (k)=>categories[k].children+'/'+k ))
+    // stats.cat_child = sort(keys.map( (k)=>categories[k].children+'/'+k ))
     //                         .map((e)=>e.split('/') );
     // // Total payouts by category, sorted
-    // stats.cat_pay =  sort(keys.map( (k)=>categories[k].total_payout_value+'/'+k ))
+    // stats.cat_pay = sort(keys.map( (k)=>categories[k].total_payout_value+'/'+k ))
     //                         .map((e)=>e.split('/') );
     // // Payouts per blog by category, sorted
-    // stats.cat_pay_avg =  sort(keys.map( (k)=>(10000*categories[k].total_payout_value/categories[k].count)+'/'+k ))
+    // stats.cat_pay_avg = sort(keys.map( (k)=>(10000*categories[k].total_payout_value/categories[k].count)+'/'+k ))
     //                         .map((e)=>e.split('/') );
 
     prepareBlog(options, stats, callback);
@@ -181,6 +181,16 @@ var statistics = function(options, results, callback) {
  * @param {function}    callback    (optional) the callback function
  */
 var prepareBlog = function(options, stats, callback) {
+    Object.keys(stats).forEach(function(k) {
+        if (k === 'count') {
+            return ;
+        } // if (k === 'count')
+        stats[k] = stats[k].slice(stats[k].length - options.count);
+        if (options.count % 2) {
+            stats[k].unshift(['', '']);
+        } // if (options.count % 2)
+    }); // Object.keys(stats).forEach(function(k) { ... });
+
     var half = Math.ceil(0.5 * options.count);
     var precision = Math.round(1.0 / options.decimal);
     fs.readFile(__filename.replace(/\.js$/g, options.body_ext),
@@ -197,82 +207,45 @@ var prepareBlog = function(options, stats, callback) {
             tag_pay:        [],
             tag_pay_avg:    []
         }; // var body = { ... };
-        Object.keys(body).forEach(function(e) {
-            var cnt = 1;
-            while (cnt <= half) {
-                // Left columns
-                var idx1 = stats.count - cnt;
-                var values1 = stats[e][idx1];//.split('~');
+        Object.keys(body).forEach(function(k, i) {
+            stats[k].reverse();
+            stats[k].forEach(function(e, i) {
                 // Index - centered
-                idx1 = cnt + '';
-                while (idx1.length < options.fmt_width_idx) {
-                    idx1 = ' ' + idx1 + ' '
-                } // while (idx1.length < options.fmt_width_idx)
-                if (idx1.length > options.fmt_width_idx) {
-                    idx1 = idx1.substr(1);
-                } // if (idx1.length > options.fmt_width_idx)
-                // Tag count - centered
-                if (e.includes('pay')) {
-                    values1[0] = parseFloat(values1[0]);
-                    if (e.includes('pay_avg')) {
-                        values1[0] /= 10000.0;
-                    } // if (e.includes('pay_avg'))
-                    values1[0] = '$' + (Math.round(values1[0] * precision) / precision);
-                } // if (e.includes('pay'))
-                while (values1[0].length < options.fmt_width_cnt) {
-                    values1[0] = ' ' + values1[0] + ' '
-                } // while (values1[0].length < options.fmt_width_cnt)
-                if (values1[0].length > options.fmt_width_cnt) {
-                    values1[0] = values1[0].substr(1);
-                } // if (values1[0].length > options.fmt_width_cnt)
-                // Tag name - left aligned
-                values1[1] = ' ' + values1[1];
-                while (values1[1].length < options.fmt_width_name) {
-                    values1[1] += ' ';
-                } // while (values1[1].length < options.fmt_width_name)
-
-                // Right columns
-                var idx2 = stats.count - cnt - half;
-                var values2 = stats[e][idx2];//.split('~');
-                if (idx2 < stats.count - options.count) {
-                    idx2 = '';
-                    values2 = ['', ''];
+                var idx = (i + 1) + '';
+                while (idx.length < options.fmt_width_idx) {
+                    idx = ' ' + idx + ' '
+                } // while (idx.length < options.fmt_width_idx)
+                if (idx.length > options.fmt_width_idx) {
+                    idx = idx.substr(1);
+                } // if (idx.length > options.fmt_width_idx)
+                // Type value - centered
+                if (k.includes('pay') && e[0] !== '') {
+                    e[0] = parseFloat(e[0]);
+                    if (k.includes('pay_avg')) {
+                        e[0] /= 10000.0;
+                    } // if (k.includes('pay_avg'))
+                    e[0] = '$' + (Math.round(e[0] * precision) / precision);
+                } // if (k.includes('pay') && e[0] !== '')
+                while (e[0].length < options.fmt_width_cnt) {
+                    e[0] = ' ' + e[0] + ' '
+                } // while (e[0].length < options.fmt_width_cnt)
+                if (e[0].length > options.fmt_width_cnt) {
+                    e[0] = e[0].substr(1);
+                } // if (e[0].length > options.fmt_width_cnt)
+                // Type name - left aligned
+                e[1] = ' ' + e[1];
+                while (e[1].length < options.fmt_width_name) {
+                    e[1] += ' ';
+                } // while (e[1].length < options.fmt_width_name)
+                if (i < half) {
+                    body[k].push('   |' + idx + '|' + e[0] + '|' + e[1] + '|');
                 } else {
-                    idx2 = cnt + half + '';
-                } // else - if (idx2 < stats.count - options.count)
-                // Index - centered
-                while (idx2.length < options.fmt_width_idx) {
-                    idx2 = ' ' + idx2 + ' '
-                } // while (idx1.length < options.fmt_width_idx)
-                if (idx2.length > options.fmt_width_idx) {
-                    idx2 = idx2.substr(1);
-                } // if (idx2.length > options.fmt_width_idx)
-                // Tag count - centered
-                if (e.includes('pay')) {
-                    values2[0] = parseFloat(values2[0]);
-                    if (e.includes('pay_avg')) {
-                        values2[0] /= 10000.0;
-                    } // if (e.includes('pay_avg'))
-                    values2[0] = '$' + (Math.round(values2[0] * precision) / precision);
-                } // if (e.includes('pay'))
-                while (values2[0].length < options.fmt_width_cnt) {
-                    values2[0] = ' ' + values2[0] + ' '
-                } // while (values2[0].length < options.fmt_width_cnt)
-                if (values2[0].length > options.fmt_width_cnt) {
-                    values2[0] = values2[0].substr(1);
-                } // if (values2[0].length > options.fmt_width_cnt)
-                // Tag name - left aligned
-                values2[1] = ' ' + values2[1];
-                while (values2[1].length < options.fmt_width_name) {
-                    values2[1] += ' ';
-                } // while (values2[1].length < options.fmt_width_name)
+                    body[k][i-half] += idx + '|' + e[0] + '|' + e[1] + '|';
+                } // else - if (i < half)
+            }); // stats[k].forEach(function(e, i) { ... });
+        }); // Object.keys(body).forEach(function(k, i) { ... });
 
-                body[e].push('   |' + idx1 + '|' + values1[0] + '|' + values1[1] + '|'
-                                     + idx2 + '|' + values2[0] + '|' + values2[1] + '|');
-                cnt ++;
-            } // while (cnt <= half)
-        }); // Object.keys(body).forEach(function(e) { ... });
-
+        // Other fields
         var strNow = new Date().toISOString();
         body.count = stats.count;
         body.today = options.today;
@@ -291,6 +264,7 @@ var prepareBlog = function(options, stats, callback) {
                         .replace('$TODAY',      options.today.toISOString())
                         .replace('$NOW',        strNow)
                         .replace('$COUNT',      stats.count)
+                        .replace('$LIMIT',      options.count)
                         .replace('$tag_freq',   body.tag_freq.join('\n'))
                         .replace('$tag_votes',  body.tag_votes.join('\n'))
                         .replace('$tag_child',  body.tag_child.join('\n'))
@@ -312,7 +286,8 @@ var prepareBlog = function(options, stats, callback) {
  */
 var publishBlog = function(options, blog, callback) {
     console.log('QueryCnTags: publishing - ' + new Date().toISOString());
-    var permlink = 'xuzhen-cn-tag-analysis-' + new Date().toISOString().split('T')[0];
+    var permlink = options.author.name + '-cn-tag-analysis-' +
+                   new Date().toISOString().split('T')[0];
     steem.broadcast.comment(options.author.posting, '', 'cn', options.author.name,
                             permlink, blog.title, blog.body, blog.json_metadata,
                             function(err, re) {
