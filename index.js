@@ -1,11 +1,14 @@
 /**
  * Main entry of the steemit blog autobot
  * @author  MarcoXZh3
- * @version 1.3.5
+ * @version 1.4.0
  */
 const CronJob = require('cron').CronJob;
 const encryption = require('./libencryption');
 const fs = require('fs');
+const steem = require('steem');
+
+
 const queryCNTags = require('./jobs/QueryCnTags');
 const QueryUtopianTypes = require('./jobs/QueryUtopianTypes');
 
@@ -17,6 +20,10 @@ options.author.posting = keys.posting;
 options.db.uri = 'mongodb://' + options.db.user + ':' + keys.dbkey
                               + '@localhost:27017/' + options.db.name;
 
+// Config steem to avoid unhandled error WebSocket not open
+steem.api.setOptions({url: 'https://api.steemit.com'});
+
+                              
 // The job to query CN tags
 new CronJob('00 05 00 * * *', function() {
     queryCNTags(options, function(blog) {
@@ -25,7 +32,7 @@ new CronJob('00 05 00 * * *', function() {
 }, null, true, 'UTC'); // new CronJob( ... );
 
 // The job to query Utopian.io tags
-new CronJob('00 05 01 * * *', function() {
+new CronJob('00 35 00 * * *', function() {
     QueryUtopianTypes(options, function(blog) {
         // Do nothing
     }); // QueryUtopianTypes(options, function(blog) { ... });
