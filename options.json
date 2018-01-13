@@ -8,5 +8,10 @@
         "name":             "steemitdb",
         "user":             "marcoxzh3"
 
+    },
+    "sqlserver": {
+        "server":           "sql.steemsql.com",
+        "user":             "steemit",
+        "password":         "steemit"
     }
 }

@@ -1,9 +1,4 @@
 {
-    "sqlserver": {
-        "server":           "sql.steemsql.com",
-        "user":             "steemit",
-        "password":         "steemit"
-    },
     "db_collection":    "stmB_TagUtopian",
     "days_before":      7,
     "count":            20,
