@@ -264,7 +264,7 @@ var prepareBlog = function(options, stats, callback) {
                         .replace('$TODAY',      options.today.toISOString())
                         .replace('$NOW',        strNow)
                         .replace('$COUNT',      stats.count)
-                        .replace('$LIMIT',      options.count)
+                        .replace(/\$LIMIT/g,    options.count)
                         .replace('$tag_freq',   body.tag_freq.join('\n'))
                         .replace('$tag_votes',  body.tag_votes.join('\n'))
                         .replace('$tag_child',  body.tag_child.join('\n'))

@@ -1,7 +1,7 @@
 /**
  * Main entry of the steemit blog autobot
  * @author  MarcoXZh3
- * @version 1.4.0
+ * @version 1.4.1
  */
 const CronJob = require('cron').CronJob;
 const encryption = require('./libencryption');
@@ -23,7 +23,6 @@ options.db.uri = 'mongodb://' + options.db.user + ':' + keys.dbkey
 // Config steem to avoid unhandled error WebSocket not open
 steem.api.setOptions({url: 'https://api.steemit.com'});
 
-                              
 // The job to query CN tags
 new CronJob('00 05 00 * * *', function() {
     queryCNTags(options, function(blog) {
