@@ -14,7 +14,7 @@ const queryUtopianTypes = require('./jobs/QueryUtopianTypes');
 
 
 let password = fs.readFileSync('pw.log', 'utf8').toString().trim();
-let keys = JSON.parse(encryption.importFileSync('keys_xuzhen', password));
+let keys = JSON.parse(encryption.importFileSync('keys', password));
 let options = JSON.parse(fs.readFileSync('options.json', 'utf8').toString());
 options.author.posting = keys.posting;
 options.db.uri = 'mongodb://' + options.db.user + ':' + keys.dbkey +
