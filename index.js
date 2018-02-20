@@ -1,7 +1,7 @@
 /**
  * Main entry of the steemit blog autobot
  * @author  MarcoXZh3
- * @version 1.6.0
+ * @version 1.6.3
  */
 const CronJob = require('cron').CronJob;
 const encryption = require('./libencryption');
@@ -14,6 +14,15 @@ const queryUtopianTypes = require('./jobs/QueryUtopianTypes');
 
 
 let password = fs.readFileSync('pw.log', 'utf8').toString().trim();
+// Generate keys if necessary
+if (!fs.existsSync('keys')) {
+  if (!fs.existsSync('keys.log')) {
+    throw new ReferenceError('No key files found');
+  } // if (!fs.existsSync('keys.log'))
+  let obj = JSON.parse(fs.readFileSync('keys.log').toString());
+  obj = JSON.stringify(obj, null, 4);
+  encryption.exportFileSync(obj, 'keys', password);
+} // if (!fs.existsSync('keys'))
 let keys = JSON.parse(encryption.importFileSync('keys', password));
 let options = JSON.parse(fs.readFileSync('options.json', 'utf8').toString());
 options.author.posting = keys.posting;

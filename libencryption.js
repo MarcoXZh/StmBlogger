@@ -1,7 +1,7 @@
 /**
  * Encryption-related libraries
  * @author  MarcoXZh3
- * @version 1.5.2
+ * @version 1.5.3
  */
 const name = module.exports.name = 'encryption';
 
@@ -64,7 +64,7 @@ function(plainData, password) {
                   dummies[idx2] +
                   encrypted.substring(idx1, encrypted.length);
   } // while ( ... )
-  encrypted += SEPERATOR + dummies;
+  encrypted += SEPERATOR + dummies.join('');
 
   // Encrypt
   const cipher = crypto.createCipher(algorithm, password);
