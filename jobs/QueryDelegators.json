@@ -1,0 +1,16 @@
+{
+    "author": {
+        "name":             "xuzhen"
+
+    },
+    "db_collection":    "stmB_delegators",
+    "title":            "cnbuddy股东名单",
+    "json_metadata": {
+        "tags":             ["cn", "statistics", "cnbuddy", "delegation"],
+        "app":              "steemit/0.1",
+        "format":           "markdown"
+    },
+    "body_ext":         ".md",
+    "decimal":          0.01,
+    "permlink":         "-cnbuddy-delegator-list-"
+}

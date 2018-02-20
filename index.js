@@ -1,7 +1,7 @@
 /**
  * Main entry of the steemit blog autobot
  * @author  MarcoXZh3
- * @version 1.6.3
+ * @version 1.7.0
  */
 const CronJob = require('cron').CronJob;
 const encryption = require('./libencryption');
@@ -11,6 +11,7 @@ const steem = require('steem');
 
 // const queryCNTags = require('./jobs/QueryCnTags');
 const queryUtopianTypes = require('./jobs/QueryUtopianTypes');
+const queryDelegators = require('./jobs/QueryDelegators.js');   // the JS file
 
 
 let password = fs.readFileSync('pw.log', 'utf8').toString().trim();
@@ -25,6 +26,7 @@ if (!fs.existsSync('keys')) {
 } // if (!fs.existsSync('keys'))
 let keys = JSON.parse(encryption.importFileSync('keys', password));
 let options = JSON.parse(fs.readFileSync('options.json', 'utf8').toString());
+options.password = password;
 options.author.posting = keys.posting;
 options.db.uri = 'mongodb://' + options.db.user + ':' + keys.dbkey +
                  '@localhost:27017/' + options.db.name;
@@ -32,18 +34,28 @@ options.db.uri = 'mongodb://' + options.db.user + ':' + keys.dbkey +
 // Config steem to avoid unhandled error WebSocket not open
 steem.api.setOptions({url: 'https://api.steemit.com'});
 
+
 /*
 // The job to query CN tags
-new CronJob('00 05 00 * * *', function() {
+new CronJob('00 05 01 * * *', function() {
   queryCNTags(options, function(blog) {
     // Do nothing
   }); // queryCNTags(options, function(blog) { ... });
 }, null, true, 'UTC'); // new CronJob( ... );
 */
 
+
 // The job to query Utopian.io tags
-new CronJob('00 35 00 * * *', function() {
+new CronJob('00 05 00 * * *', function() {
   queryUtopianTypes(options, function(blog) {
     // Do nothing
   }); // queryUtopianTypes(options, function(blog) { ... });
+}, null, true, 'UTC'); // new CronJob( ... );
+
+
+// The job to query Utopian.io tags
+new CronJob('00 35 00 * * 2,5', function() {
+  queryDelegators(options, function(blog) {
+    // Do nothing
+  }); // queryDelegators(options, function(blog) { ... });
 }, null, true, 'UTC'); // new CronJob( ... );

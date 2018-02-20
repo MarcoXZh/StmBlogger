@@ -23,9 +23,9 @@ module.exports = function(parentOptions, callback) {
     } // if (err)
     let options = JSON.parse(data.toString());
     for (let k in parentOptions) {
-      if ({}.hasOwnProperty.call(obj, k)) {
+      if ({}.hasOwnProperty.call(parentOptions, k)) {
         options[k] = parentOptions[k];
-      } // if ({}.hasOwnProperty.call(obj, k))
+      } // if ({}.hasOwnProperty.call(parentOptions, k))
     } // for (let k in parentOptions)
     runJob(options, callback);
   }); // fs.readFile( ... );
